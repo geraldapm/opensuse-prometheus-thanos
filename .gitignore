@@ -24,3 +24,7 @@ images/
 # Any generated ignition config file
 ignition/
 *.ign
+
+# Any of copied image disk file
+*.qcow2
+*.img

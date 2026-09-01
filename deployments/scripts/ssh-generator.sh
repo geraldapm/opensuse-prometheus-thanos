@@ -1,0 +1,38 @@
+#!/bin/bash
+set -e
+
+mkdir -p butane-autogen
+output_yaml="../butane-autogen/butane-ssh.yaml"
+indent="          "
+
+### Generate ssh key-pairs with "ssh-keygen -t rsa"
+### Copy from ~/.ssh/id_rsa.pub
+
+ssh_privkey_raw=$(cat ~/.ssh/id_rsa)
+ssh_privkey=$(echo "$ssh_privkey_raw" | sed "s/^/${indent}/")
+ssh_pubkey_raw=$(cat ~/.ssh/id_rsa.pub)
+ssh_pubkey=$(echo "$ssh_pubkey_raw" | sed "s/^/${indent}/")
+
+
+# Write the header to the output YAML file
+cat > "$output_yaml" <<-EOF
+variant: fcos
+version: 1.5.0
+storage:
+  files:
+    - path: /root/.ssh/id_rsa
+      contents:
+        inline: |
+$ssh_privkey
+    - path: /root/.ssh/id_rsa.pub
+      contents:
+        inline: |
+$ssh_privkey
+    - path: /root/.ssh/authorized_keys
+      contents:
+        inline: |
+$ssh_privkey
+EOF
+
+echo "SSH passwordless key have been generated successfully!"
+echo "YAML file '$output_yaml' has been successfully overwritten!"
