@@ -38,6 +38,13 @@ for vm in ${vms[*]}; do
                     | sed "s+###IP_ADDRESS###+$IP_ADDR+g" \
                     | butane)
             - inline: |-
+                $(cat $BUTANE_AUTOGEN_DIR/butane-hosts.yaml \
+                    | sed "s+###IP_GATEWAY###+$IP_GATEWAY+g" \
+                    | sed "s+/###CIDR###+/$CIDR+g" \
+                    | sed "s+###HOSTNAME###+$vm+g" \
+                    | sed "s+###IP_ADDRESS###+$IP_ADDR+g" \
+                    | butane)
+            - inline: |-
                 $(cat $BUTANE_STATIC_DIR/butane-node-exporter.yaml \
                     | butane)
             - inline: |-
