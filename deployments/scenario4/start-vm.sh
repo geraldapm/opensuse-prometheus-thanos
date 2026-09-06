@@ -10,8 +10,8 @@ TEMPLATE_DISK_FILE="$IMAGE_DIR/openSUSE-Leap-Micro.x86_64-Default-qcow.qcow2"
 IGNITION_DIR=$(pwd)/ignition
 
 ### VM Specs
-VCPU=1
-MEMORY_MB=1024
+VCPU=2
+MEMORY_MB=4096
 
 
 vm_provisioning(){
