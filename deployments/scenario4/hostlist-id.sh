@@ -14,7 +14,9 @@ IP_FLOATING="$(echo $IP_SUBNET | cut -d. -f1-3).99"
 
 ### Define member list
 hostlist=$(cat <<EOF
-192.168.100.201 gpmidservera
-192.168.100.202 gpmidserverb
+192.168.100.10 gpmidprome1
+192.168.100.20 gpmidprome2
+192.168.100.30 gpmidgrafana
+192.168.100.40 gpmidthanos
 EOF
 )

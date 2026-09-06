@@ -12,8 +12,7 @@ IP_GATEWAY="$(echo $IP_SUBNET | cut -d. -f1-3).1"
 ### Define the Virtual IP or Floating IP
 IP_FLOATING="$(echo $IP_SUBNET | cut -d. -f1-3).99"
 
-### Define cluster member list
-### Ensure that the hostname has "wontrol" and "worker" inside for node role filtering
+### Define member list
 hostlist=$(cat <<EOF
 192.168.100.10 gpmidprome1
 192.168.100.30 gpmidgrafana
