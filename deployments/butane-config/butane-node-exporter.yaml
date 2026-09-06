@@ -1,0 +1,52 @@
+variant: fcos
+version: 1.5.0
+systemd:
+  units:
+    - name: install-node-exporter.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Node Exporter Installer
+        After=network-online.target
+        Wants=network-online.target
+        ConditionPathExists=!/opt/bin/node_exporter
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        ExecStartPre=/usr/bin/mkdir -p /opt/local/bin
+        ExecStart=/bin/sh -c '\
+          TMP_DIR=/tmp && \
+          curl -sSL "https://github.com/prometheus/node_exporter/releases/download/v1.12.1/node_exporter-1.12.1.linux-amd64.tar.gz" | tar -xz -C "$TMP_DIR" && \
+          cp "$TMP_DIR/node_exporter-1.12.1.linux-amd64/node_exporter" /opt/local/bin/ && \
+          chmod +x /opt/local/bin/node_exporter && \
+          rm -rf "$TMP_DIR/node_exporter-1.12.1.linux-amd64"'
+
+        [Install]
+        WantedBy=multi-user.target
+    - name: node_exporter.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Node Exporter Metrics Agent
+        After=network-online.target
+        Wants=network-online.target
+
+        [Service]
+        Restart=always
+        RestartSec=5s
+        EnvironmentFile=-/etc/default/%N
+        EnvironmentFile=-/etc/sysconfig/%N
+        EnvironmentFile=-/etc/systemd/system/node_exporter
+        ExecStartPre=mkdir -p /var/lib/node_exporter/textfile_collector
+        ExecStart=/opt/local/bin/node_exporter\
+              --collector.textfile.directory /var/lib/node_exporter/textfile_collector \
+              --no-collector.wifi \
+              --no-collector.hwmon \
+              --no-collector.btrfs \
+              --collector.filesystem.mount-points-exclude='^/(dev|proc|sys|run/k3s/containerd/.+|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)' \
+              --collector.netclass.ignored-devices='^(veth.*|[a-f0-9]{15})$' \
+              --collector.netdev.device-exclude='^(veth.*|[a-f0-9]{15})$'
+
+        [Install]
+        WantedBy=multi-user.target

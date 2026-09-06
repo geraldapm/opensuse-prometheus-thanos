@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-mkdir -p butane-autogen
+mkdir -p ../butane-autogen
 output_yaml="../butane-autogen/butane-ssh.yaml"
 indent="          "
 
