@@ -20,7 +20,7 @@ done
 }
 
 source hostlist-id.sh
-stop_vm
+stop_vm $1
 
 source hostlist-sg.sh
-stop_vm
+stop_vm $1

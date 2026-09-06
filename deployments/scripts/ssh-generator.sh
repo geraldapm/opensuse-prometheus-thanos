@@ -27,11 +27,11 @@ $ssh_privkey
     - path: /root/.ssh/id_rsa.pub
       contents:
         inline: |
-$ssh_privkey
+$ssh_pubkey
     - path: /root/.ssh/authorized_keys
       contents:
         inline: |
-$ssh_privkey
+$ssh_pubkey
 EOF
 
 echo "SSH passwordless key have been generated successfully!"
