@@ -62,6 +62,7 @@ scp -r config/thanos root@$PROMETHEUS_SERVER:/opt/config/
 sed -i "s/ $1/ promereplica/g" config/prometheus/prometheus.yml
 
 ssh root@$PROMETHEUS_SERVER "mkdir -p /opt/data/prometheus && chmod 777 /opt/data/prometheus"
+ssh root@$PROMETHEUS_SERVER "chown -R 1000:2000 /opt/data/prometheus/*"
 ssh root@$PROMETHEUS_SERVER 'semanage fcontext -at container_file_t "/opt/data/prometheus(/.*)?"; restorecon -Rv /opt/data/prometheus'
 
 ssh root@$PROMETHEUS_SERVER systemctl daemon-reload

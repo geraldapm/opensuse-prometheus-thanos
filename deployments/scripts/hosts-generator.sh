@@ -11,10 +11,12 @@ hostlist=$(cat <<EOF
 192.168.100.10 gpmidprome1
 192.168.100.20 gpmidprome2
 192.168.100.30 gpmidgrafana
+192.168.100.40 gpmidthanos
 
 192.168.101.10 gpmsgprome1
 192.168.101.20 gpmsgprome2
 192.168.101.30 gpmsggrafana
+192.168.101.40 gpmsgthanos
 
 192.168.100.201 gpmidservera
 192.168.100.202 gpmidserverb

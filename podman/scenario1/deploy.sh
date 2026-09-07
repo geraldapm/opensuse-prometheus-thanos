@@ -21,6 +21,7 @@ scp systemd/prometheus.kube root@$PROMETHEUS_SERVER:/etc/containers/systemd/prom
 scp deployment/prometheus.yaml root@$PROMETHEUS_SERVER:/opt/deployment/prometheus.yaml
 scp -r config/prometheus root@$PROMETHEUS_SERVER:/opt/config/
 ssh root@$PROMETHEUS_SERVER "mkdir -p /opt/data/prometheus && chmod 777 /opt/data/prometheus"
+ssh root@$PROMETHEUS_SERVER "chown -R 1000:2000 /opt/data/prometheus/*"
 ssh root@$PROMETHEUS_SERVER 'semanage fcontext -at container_file_t "/opt/data/prometheus(/.*)?"; restorecon -Rv /opt/data/prometheus'
 ssh root@$PROMETHEUS_SERVER systemctl daemon-reload
 ssh root@$PROMETHEUS_SERVER systemctl restart prometheus
