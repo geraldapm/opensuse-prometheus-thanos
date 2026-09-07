@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: prometheus
+  name: prometheus
+spec:
+  containers:
+    - name: prometheus
+      image: docker.io/prom/prometheus:latest
+      ports:
+        - containerPort: 9090
+          hostPort: 9090
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+            - CAP_MKNOD
+            - CAP_NET_RAW
+            - CAP_AUDIT_WRITE
+      volumeMounts:
+        - mountPath: /prometheus/config
+          name: prometheus_config
+          readOnly: true
+        - mountPath: /prometheus/data
+          name: prometheus_data
+      args:
+        - "--config.file=/prometheus/config/prometheus.yml"
+        - "--web.enable-remote-write-receiver"
+        - "--web.enable-lifecycle"
+  restartPolicy: OnFailure
+  volumes:
+    - name: prometheus_config
+      hostPath:
+        path: /opt/config/prometheus
+        type: File
+    - name: prometheus_data
+      hostPath:
+        path: /opt/data/prometheus
+        type: Directory
+status: {}
