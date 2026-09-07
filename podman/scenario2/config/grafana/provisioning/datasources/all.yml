@@ -5,5 +5,5 @@ datasources:
     name: "Prometheus"
     org_id: 1
     type: "prometheus"
-    url: "http://gpmidprome1:19191"
+    url: "http://gpmidgrafana:9090"
     version: 1
