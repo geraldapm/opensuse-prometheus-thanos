@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: thanos
+  name: thanos
+spec:
+  containers:
+    - name: thanos-storegw
+      image: docker.io/thanosio/thanos:v0.42.4
+      ports:
+        - containerPort: 19192
+          hostPort: 19192
+        - containerPort: 10902
+          hostPort: 10902
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+            - CAP_MKNOD
+            - CAP_NET_RAW
+            - CAP_AUDIT_WRITE
+      volumeMounts:
+        - mountPath: /thanos/config
+          name: thanos_config
+          readOnly: true
+        - mountPath: /thanos/storedata
+          name: thanos_storegw_data
+      args:
+        - "store"
+        - "--http-address=0.0.0.0:19192"
+        - "--grpc-address=0.0.0.0:10902"
+        - "--objstore.config-file=/thanos/config/bucket_config.yml"
+        - "--data-dir=/thanos/storedata"
+  volumes:
+    - name: thanos_config
+      hostPath:
+        path: /opt/config/thanos
+        type: File
+    - name: thanos_storegw_data
+      hostPath:
+        path: /opt/data/thanos/storedata
+        type: Directory
+  restartPolicy: OnFailure
+status: {}

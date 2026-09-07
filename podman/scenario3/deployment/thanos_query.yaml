@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: thanos
+  name: thanos
+spec:
+  containers:
+    - name: thanos-query
+      image: docker.io/thanosio/thanos:v0.42.4
+      ports:
+        - containerPort: 19191
+          hostPort: 19191
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+            - CAP_MKNOD
+            - CAP_NET_RAW
+            - CAP_AUDIT_WRITE
+      args:
+        - "query"
+        - "--http-address=0.0.0.0:19191"
+        - "--grpc-address=0.0.0.0:10901"
+        - "--query.replica-label=replica"
+        - "--endpoint=gpmidprome1:10900"
+        - "--endpoint=gpmidprome2:10900"
+        - "--endpoint=gpmidthanos:10902"
+  restartPolicy: OnFailure
+status: {}

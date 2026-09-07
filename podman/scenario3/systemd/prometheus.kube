@@ -1,0 +1,10 @@
+[Unit]
+Description=Prometheus Deployment
+Before=local-fs.target
+
+[Kube]
+Yaml=/opt/deployment/prometheus.yaml
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target

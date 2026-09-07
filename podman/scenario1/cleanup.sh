@@ -11,7 +11,7 @@ ssh root@$GRAFANA_SERVER rm -rf /opt/{config,deployment,data}
 ssh root@$GRAFANA_SERVER rm -f /etc/containers/systemd/grafana.kube
 ssh root@$GRAFANA_SERVER systemctl daemon-reload
 
-# Deploy Prometheus Configs
+# Cleanup Prometheus Configs
 ssh root@$PROMETHEUS_SERVER systemctl stop prometheus
 ssh root@$PROMETHEUS_SERVER rm -rf /opt/{config,deployment,data}
 ssh root@$PROMETHEUS_SERVER rm -f /etc/containers/systemd/prometheus.kube
