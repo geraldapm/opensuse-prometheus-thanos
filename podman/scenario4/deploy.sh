@@ -67,7 +67,10 @@ sed -i "s/ id/ $2/g" config/prometheus/prometheus.yml
 
 scp deployment/prometheus.yaml root@$PROMETHEUS_SERVER:/opt/deployment/prometheus.yaml
 scp -r config/prometheus root@$PROMETHEUS_SERVER:/opt/config/
-scp -r config/thanos root@$PROMETHEUS_SERVER:/opt/config/
+
+sed -i "s/bucket: gpmrustfs/bucket: gpmbucket$1/g" config/thanos/bucket_config.yml
+scp -r config/thanos root@$THANOS_STOREGW_SERVER:/opt/config/
+sed -i "s/bucket: gpmbucket$1/bucket: gpmrustfs/g" config/thanos/bucket_config.yml
 
 sed -i "s/ $1/ promereplica/g" config/prometheus/prometheus.yml
 sed -i "s/ $2/ id/g" config/prometheus/prometheus.yml
