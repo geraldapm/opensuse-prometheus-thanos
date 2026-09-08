@@ -12,7 +12,7 @@ hostlist.sh
 192.168.100.10 gpmidprome1
 192.168.100.30 gpmidgrafana
 ```
-
+![scenario1.png](../../assets/scenario1.png)
 
 ## Pre-provisioning
 

@@ -1,6 +1,6 @@
 [Unit]
 Description=Thanos Query Deployment
-Before=local-fs.target
+
 
 [Kube]
 Yaml=/opt/deployment/thanos_query.yaml

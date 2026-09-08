@@ -1,0 +1,7 @@
+type: s3
+config:
+  bucket: gpmrustfs
+  endpoint: "192.168.100.1:9000"
+  insecure: true
+  access_key: gpmrustfs
+  secret_key: 0255ec0a-72ee-448c-8823-2c652fc11a13

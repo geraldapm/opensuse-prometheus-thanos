@@ -1,4 +1,4 @@
-# Node Exporter Clients Provisioing for Demo
+# Scenario 4: Adding another region with the same configuration as Scenario 3
 
 This folder explains how to provision Node Exporter clients for the Demo in using Prometheus and Thanos with openSUSE Servers.
 
@@ -9,6 +9,10 @@ There are two servers in each virtual networks. Each virtual network represents 
 hostlist-id.sh
 
 ```
+192.168.100.10 gpmidprome1
+192.168.100.20 gpmidprome2
+192.168.100.30 gpmidgrafana
+192.168.100.40 gpmidthanos
 192.168.100.201 gpmidservera
 192.168.100.202 gpmidserverb
 ```
@@ -16,10 +20,14 @@ hostlist-id.sh
 hostlist-sg.sh
 
 ```
+192.168.101.10 gpmsgprome1
+192.168.101.20 gpmsgprome2
+192.168.101.40 gpmsgthanos
 192.168.101.201 gpmsgservera
 192.168.101.202 gpmsgserverb
 ```
 
+![scenario4.png](../../assets/scenario4.png)
 
 ## Pre-provisioning
 

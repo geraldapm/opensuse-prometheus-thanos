@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: thanoscompact
+  name: thanoscompact
+spec:
+  containers:
+    - name: thanos-compact
+      image: docker.io/thanosio/thanos:v0.42.4
+      ports:
+        - containerPort: 19193
+          hostPort: 19193
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+            - CAP_MKNOD
+            - CAP_NET_RAW
+            - CAP_AUDIT_WRITE
+      volumeMounts:
+        - mountPath: /thanos/config
+          name: thanos_config
+          readOnly: true
+        - mountPath: /thanos/compactdata
+          name: thanos_compact_data
+      args:
+        - "compact"
+        - "--http-address=0.0.0.0:19193"
+        - "--objstore.config-file=/thanos/config/bucket_config.yml"
+        - "--data-dir=/thanos/compactdata"
+        - "--compact.concurrency=2"
+        - "--delete-delay=48h"
+        - "--retention.resolution-raw=0d"
+        - "--retention.resolution-5m=0d"
+        - "--retention.resolution-1h=0d"
+        - "--compact.enable-vertical-compaction"
+        - "--deduplication.replica-label=replica"
+        - "--wait"
+  volumes:
+    - name: thanos_config
+      hostPath:
+        path: /opt/config/thanos
+        type: File
+    - name: thanos_compact_data
+      hostPath:
+        path: /opt/data/thanos/compactdata
+        type: Directory
+  restartPolicy: OnFailure
+status: {}

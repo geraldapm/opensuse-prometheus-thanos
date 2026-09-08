@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: prometheus
+  name: prometheus
+spec:
+  containers:
+    - name: prometheus
+      image: docker.io/prom/prometheus:latest
+      ports:
+        - containerPort: 9090
+          hostPort: 9090
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+            - CAP_MKNOD
+            - CAP_NET_RAW
+            - CAP_AUDIT_WRITE
+        runAsUser: 1000
+        runAsGroup: 2000
+        fsGroup: 2000
+        runAsNonRoot: true
+      volumeMounts:
+        - mountPath: /prometheus/config
+          name: prometheus_config
+          readOnly: true
+        - mountPath: /prometheus/data
+          name: prometheus_data
+      args:
+        - "--config.file=/prometheus/config/prometheus.yml"
+        - "--web.enable-remote-write-receiver"
+        - "--web.enable-lifecycle"
+        - "--storage.tsdb.min-block-duration=2h"
+        - "--storage.tsdb.max-block-duration=2h"
+        - "--storage.tsdb.retention.time=1d"
+    - name: thanos-sidecar
+      image: docker.io/thanosio/thanos:v0.42.4
+      ports:
+        - containerPort: 19190
+          hostPort: 19190
+        - containerPort: 10900
+          hostPort: 10900
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+            - CAP_MKNOD
+            - CAP_NET_RAW
+            - CAP_AUDIT_WRITE
+        runAsUser: 1000
+        runAsGroup: 2000
+        fsGroup: 2000
+        runAsNonRoot: true
+      volumeMounts:
+        - mountPath: /prometheus/config
+          name: prometheus_config
+          readOnly: true
+        - mountPath: /prometheus/data
+          name: prometheus_data
+        - mountPath: /thanos/config
+          name: thanos_config
+      args:
+        - "sidecar"
+        - "--prometheus.url=http://localhost:9090"
+        - "--tsdb.path=/prometheus/data"
+        - "--objstore.config-file=/thanos/config/bucket_config.yml"
+        - "--shipper.upload-compacted"
+        - "--grpc-address=0.0.0.0:10900"
+        - "--http-address=0.0.0.0:19190"
+  restartPolicy: OnFailure
+  volumes:
+    - name: prometheus_config
+      hostPath:
+        path: /opt/config/prometheus
+        type: File
+    - name: prometheus_data
+      hostPath:
+        path: /opt/data/prometheus
+        type: Directory
+    - name: thanos_config
+      hostPath:
+        path: /opt/config/thanos
+        type: File
+status: {}

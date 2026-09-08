@@ -1,4 +1,4 @@
-# Scenario 1 Demo: Typical Node Exporter - Prometheus - Grafana deployment
+# Scenario 2: Adding another prometheus replica with Thanos Sidecar and Thanos Query
 
 This folder explains the scenario for deploying Typical Node Exporter - Prometheus - Grafana deployment. We will use two main VMs, one for Prometheus and one for Grafana. It will be deployed in the same network.
 
@@ -10,9 +10,11 @@ hostlist.sh
 
 ```
 192.168.100.10 gpmidprome1
+192.168.100.20 gpmidprome2
 192.168.100.30 gpmidgrafana
 ```
 
+![scenario2.png](../../assets/scenario2.png)
 
 ## Pre-provisioning
 
