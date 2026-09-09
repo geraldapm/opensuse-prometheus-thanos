@@ -20,6 +20,11 @@ There are four scenarios to try on:
 wget -c https://github.com/coreos/butane/releases/download/v0.25.1/butane-x86_64-unknown-linux-gnu -O butane
 chmod +x butane
 ```
+- Then download the correspoding openSUSE LEAP Micro Image from This URL -> https://download.opensuse.org/distribution/leap-micro/6.2/appliances/openSUSE-Leap-Micro.x86_64-Default-qcow.qcow2 and store in in the ./deployment/images folder
+```bash
+mkdir -p deployments/images
+wget -c https://download.opensuse.org/distribution/leap-micro/6.2/appliances/openSUSE-Leap-Micro.x86_64-Default-qcow.qcow2 -O deployments/images/
+```
 
 ## Scenario 1: Typical Node Exporter - Prometheus - Grafana deployment
 ![scenario1.png](assets/scenario1.png)
