@@ -65,6 +65,14 @@ When needs to cleanup the environment, run this script:
 bash cleanup.sh
 ```
 
+### Explanation
+You can see the differences between the configs by using this command:
+```bash
+diff -y podman/scenario1/config/prometheus/prometheus.yml podman/scenario2/config/prometheus/prometheus.yml
+diff -y podman/scenario1/deployment/prometheus.yaml podman/scenario2/deployment/prometheus.yaml
+diff -y podman/scenario1/config/grafana/provisioning/datasources/all.yml podman/scenario2/config/grafana/provisioning/datasources/all.yml
+```
+
 ## Scenario 3: Applying Object Storage Data Retention with rustFS, Thanos Store Gateway, and Thanos Compact
 ![scenario3.png](assets/scenario3.png)
 
@@ -97,6 +105,14 @@ When needs to cleanup the environment, run this script:
 bash cleanup.sh
 ```
 
+### Explanation
+You can see the differences between the configs by using this command:
+```bash
+diff -y podman/scenario2/config/prometheus/prometheus.yml podman/scenario3/config/prometheus/prometheus.yml
+diff -y podman/scenario2/deployment/prometheus.yaml podman/scenario3/deployment/prometheus.yaml
+diff -y podman/scenario2/deployment/thanos_query.yaml podman/scenario3/deployment/thanos_query.yaml
+```
+
 ## Scenario 4: Applying Object Storage Data Retention with rustFS, Thanos Store Gateway, and Thanos Compact
 ![scenario4.png](assets/scenario4.png)
 
@@ -116,3 +132,12 @@ When needs to cleanup the environment, run this script:
 ```bash
 bash cleanup.sh
 ```
+
+### Explanation
+You can see the differences between the configs by using this command:
+```bash
+diff -y podman/scenario3/config/prometheus/prometheus.yml podman/scenario4/config/prometheus/prometheus.yml
+diff -y podman/scenario3/deployment/prometheus.yaml podman/scenario4/deployment/prometheus.yaml
+diff -y podman/scenario3/deployment/thanos_query.yaml podman/scenario4/deployment/thanos_query.yaml
+```
+
