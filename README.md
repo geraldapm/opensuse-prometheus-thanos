@@ -10,6 +10,17 @@ When using *deploy.sh*, ensure that the IP Address are changed if you have diffe
 
 There are four scenarios to try on:
 
+## Prerequisites
+- Installed any Linux distribution (openSUSE preferred) with KVM availability installed.
+- Generate your ssh key. Run `ssh-keygen -t rsa` if you doesn't have it.
+- This configuration will consume around 32GB M=memory. In my case, I have 64GB of memory.
+- Butane binary executable to convert butane definition into ignition file. Download it from there -> https://github.com/coreos/butane/releases and install with this command:
+
+```bash
+wget -c https://github.com/coreos/butane/releases/download/v0.25.1/butane-x86_64-unknown-linux-gnu -O butane
+chmod +x butane
+```
+
 ## Scenario 1: Typical Node Exporter - Prometheus - Grafana deployment
 ![scenario1.png](assets/scenario1.png)
 

@@ -8,6 +8,7 @@ PROMETHEUS2_SERVER=192.168.100.20
 THANOS_STOREGW_SERVER=192.168.100.40
 
 # Deploy Grafana Configs
+echo -e "Deploying grafana configs on $GRAFANA_SERVER..."
 ssh root@$GRAFANA_SERVER mkdir -p /etc/containers/systemd
 ssh root@$GRAFANA_SERVER mkdir -p /opt/{config,deployment,data}/grafana
 scp systemd/grafana.kube root@$GRAFANA_SERVER:/etc/containers/systemd/grafana.kube
@@ -15,16 +16,19 @@ scp deployment/grafana.yaml root@$GRAFANA_SERVER:/opt/deployment/grafana.yaml
 scp -r config/grafana root@$GRAFANA_SERVER:/opt/config/
 ssh root@$GRAFANA_SERVER systemctl daemon-reload
 ssh root@$GRAFANA_SERVER systemctl restart grafana
+echo -e
 
 # Deploy Thanos Query Configs
+echo -e "Deploying thanos query configs on $GRAFANA_SERVER..."
 ssh root@$GRAFANA_SERVER mkdir -p /etc/containers/systemd
 scp systemd/thanos_query.kube root@$GRAFANA_SERVER:/etc/containers/systemd/thanos_query.kube
 scp deployment/thanos_query.yaml root@$GRAFANA_SERVER:/opt/deployment/thanos_query.yaml
 ssh root@$GRAFANA_SERVER systemctl daemon-reload
 ssh root@$GRAFANA_SERVER systemctl restart thanos_query
-
+echo -e
 
 # Deploy Thanos Store Gateway and Thanos Compact Configs
+echo -e "Deploying thanos store gateway and thanos compactor configs on $THANOS_STOREGW_SERVER..."
 ssh root@$THANOS_STOREGW_SERVER mkdir -p /etc/containers/systemd
 
 ssh root@$THANOS_STOREGW_SERVER mkdir -p /opt/{config,deployment,data}/thanos
@@ -44,10 +48,11 @@ scp systemd/thanos_compact.kube root@$THANOS_STOREGW_SERVER:/etc/containers/syst
 scp deployment/thanos_compact.yaml root@$THANOS_STOREGW_SERVER:/opt/deployment/thanos_compact.yaml
 ssh root@$THANOS_STOREGW_SERVER systemctl daemon-reload
 ssh root@$THANOS_STOREGW_SERVER systemctl restart thanos_compact
-
+echo -e
 
 # Deploy Prometheus Configs
 deploy_prometheus() {
+echo -e "Deploying prometheus configs on $PROMETHEUS_SERVER..."
 ssh root@$PROMETHEUS_SERVER mkdir -p /etc/containers/systemd
 ssh root@$PROMETHEUS_SERVER mkdir -p /opt/{config,deployment,data}/prometheus
 
@@ -67,6 +72,7 @@ ssh root@$PROMETHEUS_SERVER 'semanage fcontext -at container_file_t "/opt/data/p
 
 ssh root@$PROMETHEUS_SERVER systemctl daemon-reload
 ssh root@$PROMETHEUS_SERVER systemctl restart prometheus
+echo -e
 }
 
 PROMETHEUS_SERVER=$PROMETHEUS1_SERVER
