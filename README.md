@@ -130,6 +130,16 @@ Ensure that the networks are able to reach each other (from virbr1 to virbr2 and
 iptables -t nat -A POSTROUTING -s <your network ip subnet> -j MASQUERADE
 ```
 
+Go to the deployment [folder](podman/scenario3).
+```bash
+cd podman/scenario4
+```
+
+Deploy the rustfs in your laptop to represent external datacenter in your environment. Then create the correspoding buckets. Feel free to change the access key and secret key there:
+```bash
+bash deploy-rustfs.sh
+```
+
 Then run the script to deploy the Prometheus with Thanos with Thanos Store Gateway, Thanos Compact and Grafana Environment:
 ```bash
 bash deploy.sh
