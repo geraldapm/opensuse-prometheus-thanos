@@ -96,9 +96,10 @@ Deploy the rustfs in your laptop to represent external datacenter in your enviro
 bash deploy-rustfs.sh
 ```
 
-Ensure that all VMs are able to reach internet. You might want to add extra iptables rules to masquerade the network:
+Ensure that all VMs are able to reach internet. You might want to add extra firewalld policy to allow connection to host services in the network:
 ```bash
-iptables -t nat -A POSTROUTING -s <your network ip subnet> -j MASQUERADE
+firewall-cmd --policy libvirt-to-host --permanent --add-port=8000-10000/tcp
+firewall-cmd --reload
 ```
 
 Then run the script to deploy the Prometheus with Thanos with Thanos Store Gateway, Thanos Compact and Grafana Environment:
@@ -125,9 +126,10 @@ diff -y podman/scenario2/deployment/thanos_query.yaml podman/scenario3/deploymen
 
 Refer to the tutorial [README.md](deployments/scenario4/README.md) to provision the VMs, then you can follow the tutorial below.
 
-Ensure that the networks are able to reach each other (from virbr1 to virbr2 and vice-versa). Ensure that all VMs are able to reach internet. You might want to add extra iptables rules to masquerade the network:
+Ensure that the networks are able to reach each other (from virbr1 to virbr2 and vice-versa). Ensure that all VMs are able to reach internet. You might want to add extra firewalld policy to allow connection to host services in the network:
 ```bash
-iptables -t nat -A POSTROUTING -s <your network ip subnet> -j MASQUERADE
+firewall-cmd --policy libvirt-to-host --permanent --add-port=8000-10000/tcp
+firewall-cmd --reload
 ```
 
 Go to the deployment [folder](podman/scenario3).
