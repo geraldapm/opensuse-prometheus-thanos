@@ -49,9 +49,9 @@ sed -i 's+namespace: default+namespace: monitoring+g' bundle.yaml
 kubectl apply --server-side -f bundle.yaml
 ```
 
-- Apply the Node Exporter serviceMonitor to dynamically scrape the Node Exporter Metrics from the Node Exporter Daemonsets
+- Apply the Node Exporter serviceMonitor to dynamically scrape the Node Exporter Metrics from [node_exporter-servicemonitor.yaml](manifests/node_exporter-servicemonitor.yaml)
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/refs/heads/main/manifests/nodeExporter-serviceMonitor.yaml
+kubectl apply -f manifests/node_exporter-servicemonitor.yaml
 ```
 
 ## Setup secret for S3 access
@@ -117,6 +117,10 @@ vi /opt/deployment/thanos_query.yaml
         - "--endpoint=gpmsgprome2:10900"
         - "--endpoint=gpmsgthanos:10902"
         - "--endpoint=192.168.103.99:32110"
+```
+```
+...omitted
+        - "--query.replica-label=prometheus_replica"
 ```
 - Then Restart the Thanos Query
 ```bash
