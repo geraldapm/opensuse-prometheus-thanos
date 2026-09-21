@@ -1,6 +1,6 @@
 # Deployment Demo of Distributed Prometheus with Thanos on OpenSUSE servers
 
-This repository contains tutorial and configuration of "Distributed Monitoring System using Prometheus and Thanos on openSUSE Servers" Parallel Session delivered in openSUSE Asia Summit 2026. The distributed system is deployed using two regions, which consists of Indonesia Region and Singapore Region and simulated with KVM.
+This repository contains tutorial and configuration of ["Distributed Monitoring System using Prometheus and Thanos on openSUSE Servers"](https://events.opensuse.org/conferences/oSAS26/program/proposals/5205) Parallel Session delivered in openSUSE Asia Summit 2026. The distributed system is deployed using two regions, which consists of Indonesia Region and Singapore Region and simulated with KVM.
 
 [Slide Link](https://docs.google.com/presentation/d/1h-dTrSJsNY501irAIZV0tIGXRC3Zmgdgzcs8PaCi57o/edit?usp=sharing)
 
