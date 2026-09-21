@@ -23,11 +23,13 @@ spec:
         - "--http-address=0.0.0.0:19191"
         - "--grpc-address=0.0.0.0:10901"
         - "--query.replica-label=replica"
+        # - "--query.replica-label=prometheus_replica"
         - "--endpoint=gpmidprome1:10900"
         - "--endpoint=gpmidprome2:10900"
         - "--endpoint=gpmidthanos:10902"
         - "--endpoint=gpmsgprome1:10900"
         - "--endpoint=gpmsgprome2:10900"
         - "--endpoint=gpmsgthanos:10902"
+        # - "--endpoint=192.168.103.99:32110"
   restartPolicy: OnFailure
 status: {}
