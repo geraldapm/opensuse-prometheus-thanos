@@ -31,14 +31,18 @@ bash deploy-rustfs.sh
 kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.37/deploy/local-path-storage.yaml
 ```
 
-- Ensure that you deploy the Node Exporter DaemonSet using this URL:
+- Ensure that you deploy the Node Exporter using this Config:
 ```bash
 kubectl create namespace monitoring
 kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/refs/heads/main/manifests/nodeExporter-serviceAccount.yaml
 kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/refs/heads/main/manifests/nodeExporter-clusterRole.yaml
 kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/refs/heads/main/manifests/nodeExporter-clusterRoleBinding.yaml
-kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/refs/heads/main/manifests/nodeExporter-daemonset.yaml
 kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/refs/heads/main/manifests/nodeExporter-service.yaml
+```
+
+- Then deploy the actual Node Exporter Daemonset from [node_exporter-daemonSet.yaml](manifests/node_exporter-daemonSet.yaml). It is because we want to bypass seLinux option to prevent any errors while scraping the metrics.
+```bash
+kubectl apply -f manifests/node_exporter-daemonSet.yaml
 ```
 
 ## Deploying Prometheus Operator
