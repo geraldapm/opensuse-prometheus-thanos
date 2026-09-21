@@ -104,3 +104,22 @@ Apply the [thanos-compact.yaml](manifests/compact.yaml) with manifest:
 ```bash
 kubectl apply -f manifests/thanos-compact.yaml
 ```
+
+## Modifying the Central Thanos Query config on gpmidgrafana (Scenario 4)
+- ssh to the server and edit the /opt/deployment/thanos_query.yaml
+```bash
+vi /opt/deployment/thanos_query.yaml
+```
+- Add the additional endpoint (192.168.103.99:32110) for reaching the Kubernetes Thanos Query grpc port
+```
+...omitted
+        - "--endpoint=gpmsgprome1:10900"
+        - "--endpoint=gpmsgprome2:10900"
+        - "--endpoint=gpmsgthanos:10902"
+        - "--endpoint=192.168.103.99:32110"
+```
+- Then Restart the Thanos Query
+```bash
+systemctl restart thanos_query
+```
+- Verify on Grafana dashboard
