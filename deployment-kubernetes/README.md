@@ -58,7 +58,7 @@ kubectl apply --server-side -f bundle.yaml
 kubectl apply -f manifests/node_exporter-servicemonitor.yaml
 ```
 
-## Setup secret for S3 access
+## Setup secret for Object Storage S3 access
 - Create the config file. Adjust it with your needs (this is an example).
 ```bash
 vi bucket-config.yaml
