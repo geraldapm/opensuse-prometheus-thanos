@@ -1,5 +1,12 @@
 # Extra tutorial for Kubernetes
 
+## Setup rustfs as Object Storage provider
+
+Deploy the rustfs in your laptop to represent external datacenter in your environment. Then create the correspoding buckets. Feel free to change the access key and secret key there:
+```bash
+bash deploy-rustfs.sh
+```
+
 ## Deploying Node Exporter
 - Ensure you have the storage provider. Use local-path-provisioner if you have no storage provider for testing
 ```bash
@@ -29,6 +36,24 @@ kubectl apply --server-side -f bundle.yaml
 kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/refs/heads/main/manifests/nodeExporter-serviceMonitor.yaml
 ```
 
+## Setup secret for S3 access
+- Create the config file
+```bash
+vi bucket-config.yaml
+```
+```yaml
+type: s3
+config:
+  bucket: gpmbucketeu
+  endpoint: "192.168.103.1:9000"
+  insecure: true
+  access_key: gpmrustfs
+  secret_key: 0255ec0a-72ee-448c-8823-2c652fc11a13
+```
+- Create secret from config file
+```bash
+kubectl -n monitoring create secret generic thanos-bucket-config --from-file=bucket-config.yaml=bucket-config.yaml
+```
 
 ## Deploying Prometheus (prometheus-eu instance)
 - Setup the Prometheus Instance (2 replicas)
@@ -51,6 +76,11 @@ spec:
   serviceMonitorSelector:
     matchLabels:
       app.kubernetes.io/part-of: kube-prometheus
+  thanos:
+    image: docker.io/thanosio/thanos:v0.42.4
+    objectStorageConfig:
+      key: bucket-config.yaml
+      name: thanos-bucket-config
   securityContext:
     fsGroup: 2000
     runAsGroup: 2000
