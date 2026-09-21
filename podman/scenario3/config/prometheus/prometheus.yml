@@ -8,11 +8,11 @@ global:
 scrape_configs:
   - job_name: "node_exporter"
     relabel_configs:
-      - source_labels: [instance]
-        regex: '([^:]+):9100'
+      - source_labels: [__address__]
+        separator: ':'
+        regex: '(.*):9100'
+        replacement: '${1}'
         target_label: instance
-        replacement: '$1'
-        action: replace
     static_configs:
       - targets:
           - gpmidservera:9100
