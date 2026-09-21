@@ -5,7 +5,8 @@ Refer to the tutorial [README.md](../../deployments/scenario4/README.md) to prov
 
 Ensure that the networks are able to reach each other (from virbr1 to virbr2 and vice-versa). Ensure that all VMs are able to reach internet. You might want to add extra iptables rules to masquerade the network:
 ```bash
-iptables -t nat -A POSTROUTING -s <your network ip subnet> -j MASQUERADE
+firewall-cmd --policy libvirt-to-host --permanent --add-port=8000-10000/tcp
+firewall-cmd --reload
 ```
 
 Deploy the rustfs in your laptop to represent external datacenter in your environment. Then create the correspoding buckets. Feel free to change the access key and secret key there:

@@ -12,7 +12,8 @@ bash deploy-rustfs.sh
 
 Ensure that all VMs are able to reach internet. You might want to add extra iptables rules to masquerade the network:
 ```bash
-iptables -t nat -A POSTROUTING -s <your network ip subnet> -j MASQUERADE
+firewall-cmd --policy libvirt-to-host --permanent --add-port=8000-10000/tcp
+firewall-cmd --reload
 ```
 
 Then run the script to deploy the Prometheus with Thanos with Thanos Store Gateway, Thanos Compact and Grafana Environment:
