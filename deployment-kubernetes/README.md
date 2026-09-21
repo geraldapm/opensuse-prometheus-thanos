@@ -1,5 +1,12 @@
 # Extra tutorial for Kubernetes
 
+## Prerequisites
+- Active Kubernetes Cluster. You can follow the tutorial below to create your desired Kubernetes Distribution
+[RKE2]()
+[K3S]
+
+- If you are using cilium, ensure that this configuration is applied to be able to reach nodePort services from floating IP -> https://github.com/cilium/cilium/issues/37691#issuecomment-4253175437
+
 ## Setup rustfs as Object Storage provider
 
 Deploy the rustfs in your laptop to represent external datacenter in your environment. Then create the correspoding buckets. Feel free to change the access key and secret key there:
@@ -56,121 +63,33 @@ kubectl -n monitoring create secret generic thanos-bucket-config --from-file=buc
 ```
 
 ## Deploying Prometheus (prometheus-eu instance)
-- Setup the Prometheus Instance (2 replicas)
+- Setup the Prometheus Instance (2 replicas) by applying [prometheus-eu.yaml](manifests/prometheus-eu.yaml) manifest:
 ```bash
-vi prometheus-eu.yaml
-```
-```yaml
----
-apiVersion: monitoring.coreos.com/v1
-kind: Prometheus
-metadata:
-  namespace: monitoring
-  name: prometheus-eu
-  labels:
-    prometheus: prometheus-eu
-spec:
-  replicas: 2
-  serviceAccountName: prometheus
-  serviceMonitorNamespaceSelector: {}
-  serviceMonitorSelector:
-    matchLabels:
-      app.kubernetes.io/part-of: kube-prometheus
-  thanos:
-    image: docker.io/thanosio/thanos:v0.42.4
-    objectStorageConfig:
-      key: bucket-config.yaml
-      name: thanos-bucket-config
-  securityContext:
-    fsGroup: 2000
-    runAsGroup: 2000
-    runAsNonRoot: true
-    runAsUser: 2000
-  storage:
-    volumeClaimTemplate:
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        storageClassName: local-path
-        resources:
-          requests:
-            storage: 10Gi
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    prometheus: prometheus-eu
-  name: prometheus-eu
-  namespace: monitoring
-spec:
-  type: NodePort
-  ports:
-  - name: web
-    port: 9090
-    targetPort: web
-    nodePort: 32113
-  selector:
-    prometheus: prometheus-eu
----
-apiVersion: v1
-automountServiceAccountToken: false
-kind: ServiceAccount
-metadata:
-  labels:
-    prometheus: prometheus-eu
-  name: prometheus
-  namespace: monitoring
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: prometheus
-rules:
-- apiGroups: [""]
-  resources:
-  - nodes
-  - nodes/metrics
-  - services
-  - endpoints
-  - pods
-  verbs: ["get", "list", "watch"]
-- apiGroups: [""]
-  resources:
-  - configmaps
-  verbs: ["get"]
-- apiGroups:
-  - discovery.k8s.io
-  resources:
-  - endpointslices
-  verbs: ["get", "list", "watch"]
-- apiGroups:
-  - networking.k8s.io
-  resources:
-  - ingresses
-  verbs: ["get", "list", "watch"]
-- nonResourceURLs: ["/metrics"]
-  verbs: ["get"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    prometheus: prometheus-eu
-  name: prometheus-k8s
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: prometheus
-subjects:
-- kind: ServiceAccount
-  name: prometheus
-  namespace: monitoring
-```
-- Then apply the manifest
-```bash
-kubectl apply -f prometheus-eu.yaml
+kubectl apply -f manifests/prometheus-eu.yaml
 ```
 
 ## Deploying Thanos Query
-TODO
+Apply the [thanos-query.yaml](manifests/thanos-query.yaml) manifest:
+```bash
+kubectl apply -f manifests/thanos-query.yaml
+```
+
+## Deploying Thanos Store Gateway
+The thanos store gateway will be deployed with two shards, each shards takes half of all block stored inside the block storage with hashmod algorithm (divide by two).
+
+### Shard 0/2
+Apply the [thanos-store-shard-0.yaml](manifests/thanos-store-shard-0.yaml) manifest:
+```bash
+kubectl apply -f manifests/thanos-store-shard-0.yaml
+```
+### Shard 1/2
+Apply the [thanos-store-shard-1.yaml](manifests/thanos-store-shard-1.yaml) manifest:
+```bash
+kubectl apply -f manifests/thanos-store-shard-1.yaml
+```
+
+## Deploying Thanos Compactor
+Apply the [thanos-compact.yaml](manifests/compact.yaml) with manifest:
+```bash
+kubectl apply -f manifests/thanos-compact.yaml
+```
