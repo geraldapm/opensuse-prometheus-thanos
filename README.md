@@ -1,19 +1,21 @@
 # Deployment Demo of Distributed Prometheus with Thanos on OpenSUSE servers
 
-The distributed system is deployed using two regions, which consists of Indonesia Region and Singapore Region and simulated with KVM.
+This repository contains tutorial and configuration of "Distributed Monitoring System using Prometheus and Thanos on openSUSE Servers" Parallel Session delivered in openSUSE Asia Summit 2026. The distributed system is deployed using two regions, which consists of Indonesia Region and Singapore Region and simulated with KVM.
 
-Prerequisites:
-
-You should deploy the underlying target servers first using this [README.md](deployments/clients/README.md).
-
-When using *deploy.sh*, ensure that the IP Address are changed if you have different network setup than defined in this repository
+[Slide Link](https://docs.google.com/presentation/d/1h-dTrSJsNY501irAIZV0tIGXRC3Zmgdgzcs8PaCi57o/edit?usp=sharing)
 
 There are four scenarios to try on:
+- Scenario 1: Typical Node Exporter - Prometheus - Grafana deployment
+- Scenario 2: Adding another prometheus replica with Thanos Sidecar and Thanos Query
+- Scenario 3: Applying Object Storage Data Retention with rustFS, Thanos Store Gateway, and Thanos Compact
+- Scenario 4: Adding another region with the same configuration as Scenario 3
 
 ## Prerequisites
 - Installed any Linux distribution (openSUSE preferred) with KVM availability installed.
 - Generate your ssh key. Run `ssh-keygen -t rsa` if you doesn't have it.
 - This configuration will consume around 32GB M=memory. In my case, I have 64GB of memory.
+- You should deploy the underlying target servers first using this [README.md](deployments/clients/README.md).
+- When using *deploy.sh*, ensure that the IP Address are changed if you have different network setup than defined in this repository
 - Butane binary executable to convert butane definition into ignition file. Download it from there -> https://github.com/coreos/butane/releases and install with this command:
 
 ```bash
@@ -121,7 +123,7 @@ diff -y podman/scenario2/deployment/prometheus.yaml podman/scenario3/deployment/
 diff -y podman/scenario2/deployment/thanos_query.yaml podman/scenario3/deployment/thanos_query.yaml
 ```
 
-## Scenario 4: Applying Object Storage Data Retention with rustFS, Thanos Store Gateway, and Thanos Compact
+## Scenario 4: Adding another region with the same configuration as Scenario 3
 ![scenario4.png](assets/scenario4.png)
 
 Refer to the tutorial [README.md](deployments/scenario4/README.md) to provision the VMs, then you can follow the tutorial below.

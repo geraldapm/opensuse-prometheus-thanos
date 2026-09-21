@@ -1,4 +1,4 @@
-## Scenario 4: Applying Object Storage Data Retention with rustFS, Thanos Store Gateway, and Thanos Compact
+## Scenario 4: Adding another region with the same configuration as Scenario 3
 ![scenario4.png](../../assets/scenario4.png)
 
 Refer to the tutorial [README.md](../../deployments/scenario4/README.md) to provision the VMs, then you can follow the tutorial below.
