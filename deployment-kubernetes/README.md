@@ -40,13 +40,13 @@ kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/kube-prom
 kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/refs/heads/main/manifests/nodeExporter-service.yaml
 ```
 
-- Then deploy the actual Node Exporter Daemonset from [node_exporter-daemonSet.yaml](manifests/node_exporter-daemonSet.yaml). It is because we want to bypass seLinux option to prevent any errors while scraping the metrics.
+- Then deploy the actual Node Exporter Daemonset from [node_exporter-daemonSet.yaml](manifests/node_exporter-daemonSet.yaml). It is because we want to bypass SELinux option to prevent any errors while scraping the metrics.
 ```bash
 kubectl apply -f manifests/node_exporter-daemonSet.yaml
 ```
 
 ## Deploying Prometheus Operator
-- Then install the Prometheus Operator for managing the prometheus instances
+- Install the Prometheus Operator for managing the prometheus instances
 ```bash
 wget https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.94.0/bundle.yaml
 sed -i 's+namespace: default+namespace: monitoring+g' bundle.yaml
@@ -59,7 +59,7 @@ kubectl apply -f manifests/node_exporter-servicemonitor.yaml
 ```
 
 ## Setup secret for S3 access
-- Create the config file
+- Create the config file. Adjust it with your needs (this is an example).
 ```bash
 vi bucket-config.yaml
 ```
@@ -72,7 +72,7 @@ config:
   access_key: gpmrustfs
   secret_key: 0255ec0a-72ee-448c-8823-2c652fc11a13
 ```
-- Create secret from config file
+- Create secret from bucket config file
 ```bash
 kubectl -n monitoring create secret generic thanos-bucket-config --from-file=bucket-config.yaml=bucket-config.yaml
 ```
@@ -83,11 +83,19 @@ kubectl -n monitoring create secret generic thanos-bucket-config --from-file=buc
 kubectl apply -f manifests/prometheus-eu.yaml
 ```
 
+- Monitor the prometheus status
+```bash
+gpmrke2controlplane1:~ # kubectl get prometheus -n monitoring
+NAME            VERSION   DESIRED   READY   RECONCILED   AVAILABLE   AGE
+prometheus-eu             2         2       True         True        18h
+```
+
 ## Deploying Thanos Query
-Apply the [thanos-query.yaml](manifests/thanos-query.yaml) manifest:
+- Apply the [thanos-query.yaml](manifests/thanos-query.yaml) manifest:
 ```bash
 kubectl apply -f manifests/thanos-query.yaml
 ```
+- Try to access the nodeport from the browser -> http://192.168.103.101:32111
 
 ## Deploying Thanos Store Gateway
 The thanos store gateway will be deployed with two shards, each shards takes half of all block stored inside the block storage with hashmod algorithm (divide by two).
@@ -104,17 +112,18 @@ kubectl apply -f manifests/thanos-store-shard-1.yaml
 ```
 
 ## Deploying Thanos Compactor
-Apply the [thanos-compact.yaml](manifests/compact.yaml) with manifest:
+- Apply the [thanos-compact.yaml](manifests/compact.yaml) with manifest:
 ```bash
 kubectl apply -f manifests/thanos-compact.yaml
 ```
+- Try to access the nodeport from the browser -> http://192.168.103.101:32115
 
 ## Modifying the Central Thanos Query config on gpmidgrafana (Scenario 4)
 - ssh to the server and edit the /opt/deployment/thanos_query.yaml
 ```bash
 vi /opt/deployment/thanos_query.yaml
 ```
-- Add the additional endpoint (192.168.103.99:32110) for reaching the Kubernetes Thanos Query grpc port
+- Add the additional endpoint (192.168.103.99:32110), preferable the floating IP for reaching the Kubernetes Thanos Query grpc port:
 ```
 ...omitted
         - "--endpoint=gpmsgprome1:10900"
@@ -122,6 +131,7 @@ vi /opt/deployment/thanos_query.yaml
         - "--endpoint=gpmsgthanos:10902"
         - "--endpoint=192.168.103.99:32110"
 ```
+- Add the additional replica option:
 ```
 ...omitted
         - "--query.replica-label=prometheus_replica"
@@ -130,4 +140,4 @@ vi /opt/deployment/thanos_query.yaml
 ```bash
 systemctl restart thanos_query
 ```
-- Verify on Grafana dashboard
+- Verify on Grafana dashboard or the Central Thanos Query web.

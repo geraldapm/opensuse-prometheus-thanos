@@ -9,6 +9,7 @@ There are four scenarios to try on:
 - Scenario 2: Adding another prometheus replica with Thanos Sidecar and Thanos Query
 - Scenario 3: Applying Object Storage Data Retention with rustFS, Thanos Store Gateway, and Thanos Compact
 - Scenario 4: Adding another region with the same configuration as Scenario 3
+- Extra Scenario: Deploy Prometheus and Thanos with Kubernetes and combining it with Scenario 4
 
 ## Prerequisites
 - Installed any Linux distribution (openSUSE preferred) with KVM availability installed.
@@ -163,3 +164,6 @@ diff -y podman/scenario3/deployment/prometheus.yaml podman/scenario4/deployment/
 diff -y podman/scenario3/deployment/thanos_query.yaml podman/scenario4/deployment/thanos_query.yaml
 ```
 
+## Extra Scenario: Deploy Prometheus and Thanos with Kubernetes and combining it with Scenario 4
+
+Refer to the tutorial [README.md](deployment-kubernetes/README.md) to Deploy the prometheus and thanos.
