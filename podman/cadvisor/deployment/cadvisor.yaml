@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cadvisor
+  labels:
+    app: cadvisor
+spec:
+  containers:
+  - name: cadvisor
+    image: gcr.io/cadvisor/cadvisor:latest
+    resources:
+      limits:
+        podman.io/device=/dev/kmsg: 1
+    securityContext:
+      privileged: true
+    args:
+    - --podman=unix:///var/run/podman/podman.sock
+    - --docker=unix://
+    ports:
+    - containerPort: 8080
+      hostPort: 10800
+    volumeMounts:
+    - name: rootfs
+      mountPath: /rootfs
+      readOnly: true
+    - name: run
+      mountPath: /run
+      readOnly: true
+    - name: sys
+      mountPath: /sys
+      readOnly: true
+    - name: var-lib-containers
+      mountPath: /var/lib/containers
+      readOnly: true
+    - name: dev-disk
+      mountPath: /dev/disk
+      readOnly: true
+      # Point to your engine's podman.sock (Adjust host path if running Rootless)
+    - name: podmansock
+      mountPath: /var/run/podman/podman.sock
+  volumes:
+  - name: rootfs
+    hostPath:
+      path: /
+  - name: run
+    hostPath:
+      path: /run
+  - name: sys
+    hostPath:
+      path: /sys
+  - name: var-lib-containers
+    hostPath:
+      path: /var/lib/containers
+  - name: dev-disk
+    hostPath:
+      path: /dev/disk
+  - name: podmansock
+    hostPath:
+      path: /run/podman/podman.sock

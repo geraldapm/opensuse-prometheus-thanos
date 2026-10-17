@@ -1,0 +1,9 @@
+[Unit]
+Description=cAdvisor Deployment
+
+[Kube]
+Yaml=/opt/deployment/cadvisor.yaml
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target
